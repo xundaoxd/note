@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+exe_path=`realpath $PWD/$0`
+tools_path=`dirname $exe_path`
+note_path=`realpath $tools_path/..`
+posts_path="$note_path/posts"
+
+title="$1"
+shift
+tags="$@"
+
+mkdir -p "$posts_path/$title"
+cat > "$posts_path/$title/README.md" << EOF
+---
+title: $title
+date: $(date --iso-8601=seconds)
+EOF
+
+if [ -n "$tags" ]; then
+    echo 'tags:' >> "$posts_path/$title/README.md"
+    for tag in $tags; do
+        echo "  - $tag" >> "$posts_path/$title/README.md"
+    done
+fi
+
+echo -e '---\n' >> "$posts_path/$title/README.md"
+
